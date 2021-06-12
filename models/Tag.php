@@ -54,4 +54,41 @@ class Tag extends \yii\db\ActiveRecord
     {
         return implode(', ', $tags);
     }
+
+    public static function updateFrequency($oldTags, $newTags)
+    {
+        $oldTags = self::stringToArray($oldTags);
+        $newTags = self::stringToArray($newTags);
+        self::addTags(array_values(array_diff($newTags, $oldTags)));
+        self::removeTags(array_values(array_diff($oldTags, $newTags)));
+    }
+
+    public static function addTags($tags)
+    {
+        $data = self::find()->where(['name' => $tags])->all();
+        foreach ($data as $tag) {
+            $tag->updateCounters(['frequency' => 1]);
+        }
+        foreach ($tags as $name) {
+            $data = Tag::find()->where(['name' => $name]);
+            if (!$data->exists()) {
+                $tag = new Tag;
+                $tag->name = $name;
+                $tag->frequency = 1;
+                $tag->save();
+            }
+        }
+    }
+
+    public static function removeTags($tags)
+    {
+        if (empty($tags)) {
+            return;
+        }
+        $data = self::find()->where(['name' => $tags])->all();
+        foreach ($data as $tag) {
+            $tag->updateCounters(['frequency' => -1]);
+        }
+        self::deleteAll('frequency <= 0');
+    }
 }

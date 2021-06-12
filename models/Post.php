@@ -27,6 +27,8 @@ class Post extends \yii\db\ActiveRecord
     const STATUS_PUBLISHED = 2;
     const STATUS_ARCHIVED = 3;
 
+    private $oldTags;
+
     public function behaviors()
     {
         return [
@@ -119,5 +121,33 @@ class Post extends \yii\db\ActiveRecord
     public function getUrl()
     {
         return Url::to(['post/view', 'id' => $this->id, 'title' => $this->title]);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->create_time = $this->update_time = time();
+                $this->author_id = Yii::$app->user->id;
+            } else {
+                $this->update_time = time();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave();
+        Tag::updateFrequency($this->oldTags, $this->tags);
+    }
+
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->oldTags = $this->tags;
     }
 }
