@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%post}}".
@@ -21,6 +22,10 @@ use Yii;
  */
 class Post extends \yii\db\ActiveRecord
 {
+    const STATUS_DRAFT = 1;
+    const STATUS_PUBLISHED = 2;
+    const STATUS_ARCHIVED = 3;
+
     /**
      * {@inheritdoc}
      */
@@ -84,5 +89,10 @@ class Post extends \yii\db\ActiveRecord
     public function normalizeTags($attribute, $params)
     {
         $this->tags = Tag::arrayToString(array_unique(Tag::stringToArray($this->tags)));
+    }
+
+    public function getUrl()
+    {
+        return Url::to(['post/view', 'id' => $this->id, 'title' => $this->title]);
     }
 }
