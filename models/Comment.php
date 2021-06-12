@@ -37,17 +37,10 @@ class Comment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'post_id'], 'integer'],
-            [['email', 'create_time', 'post_id'], 'required'],
-            [['create_time'], 'safe'],
-            [['author', 'content', 'email', 'url'], 'string', 'max' => 255],
-            [
-                ['post_id'],
-                'exist',
-                'skipOnError' => true,
-                'targetClass' => Post::className(),
-                'targetAttribute' => ['post_id' => 'id']
-            ],
+            [['content', 'author', 'email'], 'required'],
+            [['author', 'email', 'url'], 'length', 'max' => 128],
+            ['email', 'email'],
+            ['url', 'url']
         ];
     }
 
