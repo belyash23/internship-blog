@@ -20,6 +20,9 @@ use Yii;
  */
 class Comment extends \yii\db\ActiveRecord
 {
+    const STATUS_PENDING = 1;
+    const STATUS_APPROVED = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +41,13 @@ class Comment extends \yii\db\ActiveRecord
             [['email', 'create_time', 'post_id'], 'required'],
             [['create_time'], 'safe'],
             [['author', 'content', 'email', 'url'], 'string', 'max' => 255],
-            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
+            [
+                ['post_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Post::className(),
+                'targetAttribute' => ['post_id' => 'id']
+            ],
         ];
     }
 

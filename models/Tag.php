@@ -44,4 +44,14 @@ class Tag extends \yii\db\ActiveRecord
             'frequency' => 'Frequency',
         ];
     }
+
+    public static function stringToArray($tags)
+    {
+        return preg_split('/\s*,\s*/', trim($tags), -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    public static function arrayToString($tags)
+    {
+        return implode(', ', $tags);
+    }
 }

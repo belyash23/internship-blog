@@ -36,10 +36,11 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'content', 'status'], 'required'],
-            [['status', 'user_id'], 'integer'],
-            [['create_time', 'update_time'], 'safe'],
-            [['title', 'content', 'tags'], 'string', 'max' => 255],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            ['title', 'string', 'max' => 128],
+            ['status', 'in', 'range' => [1, 2, 3]],
+            ['tags', 'match', 'pattern' => '/^[\w\s,]+$/', 'message' => 'В тегах можно использовать только буквы.'],
+            ['tags', 'normalizeTags'],
+            [['title', 'status'], 'safe', 'on' => 'search']
         ];
     }
 
@@ -67,7 +68,7 @@ class Post extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comment::className(), ['post_id' => 'id']);
+        return $this->hasMany(Comment::class, ['post_id' => 'id']);
     }
 
     /**
@@ -77,6 +78,11 @@ class Post extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public function normalizeTags($attribute, $params)
+    {
+        $this->tags = Tag::arrayToString(array_unique(Tag::stringToArray($this->tags)));
     }
 }
