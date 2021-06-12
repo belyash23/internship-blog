@@ -51,13 +51,13 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author' => 'Author',
-            'content' => 'Content',
+            'author' => 'Name',
+            'content' => 'Comment',
             'status' => 'Status',
             'email' => 'Email',
-            'url' => 'Url',
+            'url' => 'Website',
             'create_time' => 'Create Time',
-            'post_id' => 'Post ID',
+            'post_id' => 'Post',
         ];
     }
 
