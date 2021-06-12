@@ -61,6 +61,17 @@ class Comment extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave()
+    {
+        if (parent::beforeSave()) {
+            if ($this->isNewRecord) {
+                $this->create_time = time();
+            }
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Gets query for [[Post]].
      *
