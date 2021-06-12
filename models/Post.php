@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
 
 /**
@@ -25,6 +26,30 @@ class Post extends \yii\db\ActiveRecord
     const STATUS_DRAFT = 1;
     const STATUS_PUBLISHED = 2;
     const STATUS_ARCHIVED = 3;
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['*'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => false,
+                        'roles' => ['*'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     /**
      * {@inheritdoc}

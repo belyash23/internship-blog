@@ -61,9 +61,9 @@ class Comment extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeSave()
+    public function beforeSave($insert)
     {
-        if (parent::beforeSave()) {
+        if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
                 $this->create_time = time();
             }
