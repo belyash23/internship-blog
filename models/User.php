@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -16,7 +17,7 @@ use Yii;
  *
  * @property Post[] $posts
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -32,8 +33,8 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'password', 'salt', 'email'], 'required'],
-            [['name', 'password', 'salt', 'email', 'profile'], 'string', 'max' => 255],
+            [['username', 'password', 'salt', 'email'], 'required'],
+            [['username', 'password', 'salt', 'email', 'profile'], 'string', 'max' => 255],
             [['password'], 'unique'],
         ];
     }
@@ -61,5 +62,49 @@ class User extends \yii\db\ActiveRecord
     public function getPosts()
     {
         return $this->hasMany(Post::className(), ['user_id' => 'id']);
+    }
+
+    public function validateUsername($username)
+    {
+        $username = strtolower($username);
+        $sql = 'SELECT * FROM tbl_user WHERE LOWER(username)=:username';
+        $user = User::findBySql($sql, [':username' => $username])->one();
+        return $user == true;
+    }
+
+    public function validatePassword($password)
+    {
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+    }
+
+    public function authenticate($username, $password)
+    {
+        if ($this->validateUsername($username) && $this->validatePassword($password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function findIdentity($id)
+    {
+        User::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+    }
+
+    public function validateAuthKey($authKey)
+    {
     }
 }
