@@ -46,7 +46,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            'username' => 'Name',
             'password' => 'Password',
             'salt' => 'Salt',
             'email' => 'Email',
@@ -86,9 +86,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }
     }
 
+    public static function findByUsername($username) {
+        return User::findOne(['username' => $username]);
+    }
+
     public static function findIdentity($id)
     {
-        User::findOne($id);
+        return self::findOne($id);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
