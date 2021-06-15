@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
@@ -101,6 +102,19 @@ class Post extends \yii\db\ActiveRecord
     public function getComments()
     {
         return $this->hasMany(Comment::class, ['post_id' => 'id']);
+    }
+
+    public function getCommentCount()
+    {
+        return $this->getComments()->where(['status' => Comment::STATUS_APPROVED])->count();
+    }
+
+    public function getTagLinks()
+    {
+        $links=array();
+        foreach(Tag::stringToArray($this->tags) as $tag)
+            $links[]=Html::a(Html::encode($tag), array('post/index', 'tag'=>$tag));
+        return $links;
     }
 
     /**

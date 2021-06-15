@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PostSearch */
@@ -11,33 +11,22 @@ $this->title = 'Posts';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="post-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php
+    $tag = Yii::$app->request->get('tag');
+    if (!empty($tag)) {
+        echo "<h1>Posts Tagged with <i>" . HTML::encode($tag) . "</i></h1>";
+    }
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'title',
-            'content',
-            'status',
-            'tags',
-            //'create_time',
-            //'update_time',
-            //'user_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+    echo ListView::widget(
+        [
+            'dataProvider' => $dataProvider,
+            'itemView' => '_post',
+        ]
+    );
+    ?>
 
 
 </div>

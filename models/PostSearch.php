@@ -18,7 +18,7 @@ class PostSearch extends Post
     {
         return [
             [['id', 'status', 'user_id'], 'integer'],
-            [['title', 'content', 'tags', 'create_time', 'update_time'], 'safe'],
+            [['title', 'content', 'tags', 'update_time'], 'safe'],
         ];
     }
 
