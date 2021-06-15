@@ -164,4 +164,11 @@ class Post extends \yii\db\ActiveRecord
         parent::afterFind();
         $this->oldTags = $this->tags;
     }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        Comment::deleteAll('post_id='.$this->id);
+        Tag::updateFrequency($this->tags, '');
+    }
 }
