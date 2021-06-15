@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Comment;
 use Yii;
 use app\models\Post;
 use app\models\PostSearch;
@@ -40,7 +41,7 @@ class PostController extends Controller
     {
         $query = Post::find()->where(['status' => Post::STATUS_PUBLISHED])->with('comments');
         $tag = Yii::$app->request->get('tag');
-        if(isset($tag)) {
+        if (isset($tag)) {
             $query = $query->filterWhere(['like', 'tags', '%' . $tag . '%', false]);
         }
         $searchModel = new PostSearch();
@@ -77,12 +78,33 @@ class PostController extends Controller
      */
     public function actionView($id)
     {
+        $post = $this->findModel($id);
         return $this->render(
             'view',
             [
-                'model' => $this->findModel($id),
+                'model' => $post,
+                'comment' => $this->newComment($post)
             ]
         );
+    }
+
+    protected function newComment($post)
+    {
+        $comment = new Comment();
+        if (isset($_POST['Comment'])) {
+            $comment->attributes = $_POST['Comment'];
+            if ($post->addComment($comment)) {
+                if ($comment->status == Comment::STATUS_PENDING) {
+                    Yii::$app->session->setFlash(
+                        'commentSubmitted',
+                        'Thank you for your comment.
+                Your comment will be posted once it is approved.'
+                    );
+                }
+                $this->refresh();
+            }
+        }
+        return $comment;
     }
 
     /**

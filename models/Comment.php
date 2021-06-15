@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "{{%comment}}".
@@ -38,7 +39,7 @@ class Comment extends \yii\db\ActiveRecord
     {
         return [
             [['content', 'author', 'email'], 'required'],
-            [['author', 'email', 'url'], 'length', 'max' => 128],
+            [['author', 'email', 'url'], 'string', 'max' => 128],
             ['email', 'email'],
             ['url', 'url']
         ];
@@ -80,5 +81,22 @@ class Comment extends \yii\db\ActiveRecord
     public function getPost()
     {
         return $this->hasOne(Post::className(), ['id' => 'post_id']);
+    }
+
+    public function getUrl($post = null)
+    {
+        if ($post === null) {
+            $post = $this->post;
+        }
+        return $post->url . '#c' . $this->id;
+    }
+
+    public function getAuthorLink()
+    {
+        if (!empty($this->url)) {
+            return Html::a(Html::encode($this->author), $this->url);
+        } else {
+            return Html::encode($this->author);
+        }
     }
 }

@@ -111,9 +111,10 @@ class Post extends \yii\db\ActiveRecord
 
     public function getTagLinks()
     {
-        $links=array();
-        foreach(Tag::stringToArray($this->tags) as $tag)
-            $links[]=Html::a(Html::encode($tag), array('post/index', 'tag'=>$tag));
+        $links = array();
+        foreach (Tag::stringToArray($this->tags) as $tag) {
+            $links[] = Html::a(Html::encode($tag), array('post/index', 'tag' => $tag));
+        }
         return $links;
     }
 
@@ -135,6 +136,13 @@ class Post extends \yii\db\ActiveRecord
     public function getUrl()
     {
         return Url::to(['post/view', 'id' => $this->id, 'title' => $this->title]);
+    }
+
+    public function addComment($comment)
+    {
+        $comment->status = Comment::STATUS_APPROVED;
+        $comment->post_id = $this->id;
+        return $comment->save();
     }
 
     public function beforeSave($insert)
@@ -168,7 +176,7 @@ class Post extends \yii\db\ActiveRecord
     public function afterDelete()
     {
         parent::afterDelete();
-        Comment::deleteAll('post_id='.$this->id);
+        Comment::deleteAll('post_id=' . $this->id);
         Tag::updateFrequency($this->tags, '');
     }
 }
