@@ -118,6 +118,10 @@ class Post extends \yii\db\ActiveRecord
         return $links;
     }
 
+    public function getStatusName() {
+        return $this->hasOne(Lookup::class, ['code' => 'status']);
+    }
+
     /**
      * Gets query for [[User]].
      *

@@ -161,7 +161,9 @@ class PostController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        if (Yii::$app->getRequest()->isAjax) {
+            return $this->renderAdmin();
+        }
         return $this->redirect(['index']);
     }
 
@@ -179,5 +181,27 @@ class PostController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function renderAdmin()
+    {
+        $model = new PostSearch();
+        $post = Yii::$app->request->get('Post');
+        if (isset($post)) {
+            $model->attributes = $post;
+        }
+        $searchModel = new \app\models\PostSearch(Yii::$app->request->get('PostSearch'));
+        return $this->render(
+            'admin',
+            [
+                'model' => $model,
+                'searchModel' => $searchModel
+            ]
+        );
+    }
+
+    public function actionAdmin()
+    {
+        return $this->renderAdmin();
     }
 }

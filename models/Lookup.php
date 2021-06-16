@@ -36,13 +36,7 @@ class Lookup extends \yii\db\ActiveRecord
     private static function loadItems($type)
     {
         self::$items[$type] = array();
-        $models = self::findAll(
-            array(
-                'condition' => 'type=:type',
-                'params' => array(':type' => $type),
-                'order' => 'position',
-            )
-        );
+        $models = self::findAll(['type' => $type]);
         foreach ($models as $model) {
             self::$items[$type][$model->code] = $model->name;
         }
