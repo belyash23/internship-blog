@@ -99,4 +99,9 @@ class Comment extends \yii\db\ActiveRecord
             return Html::encode($this->author);
         }
     }
+
+    public static function getPendingCommentCount()
+    {
+        return self::find()->where(['status' => self::STATUS_PENDING])->count();
+    }
 }
