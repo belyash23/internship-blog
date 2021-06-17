@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'content')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($model, 'status')->dropDownList(\app\models\Lookup::items('PostStatus')) ?>
 
     <?= $form->field($model, 'tags')->textInput(['maxlength' => true]) ?>
 
