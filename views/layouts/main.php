@@ -73,6 +73,7 @@ $this->beginBody() ?>
             echo UserMenu::widget();
         }
         echo \app\components\TagCloud::widget(['maxTags' => Yii::$app->params['tagCloudCount']]);
+        echo \app\components\RecentComments::widget(['maxComments' => Yii::$app->params['recentCommentCount']]);
         ?>
     </div>
 

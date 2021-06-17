@@ -6,4 +6,5 @@ return [
     'senderName' => 'Example.com mailer',
     'commentNeedApproval' => true,
     'tagCloudCount' => 20,
+    'recentCommentCount' => 10,
 ];
