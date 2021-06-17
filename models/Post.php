@@ -118,7 +118,8 @@ class Post extends \yii\db\ActiveRecord
         return $links;
     }
 
-    public function getStatusName() {
+    public function getStatusName()
+    {
         return $this->hasOne(Lookup::class, ['code' => 'status']);
     }
 
@@ -144,7 +145,12 @@ class Post extends \yii\db\ActiveRecord
 
     public function addComment($comment)
     {
-        $comment->status = Comment::STATUS_APPROVED;
+        if (Yii::$app->params['commentNeedApproval']) {
+            $comment->status = Comment::STATUS_PENDING;
+        } else {
+            $comment->status = Comment::STATUS_APPROVED;
+        }
+
         $comment->post_id = $this->id;
         return $comment->save();
     }

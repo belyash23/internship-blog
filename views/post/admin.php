@@ -1,8 +1,6 @@
 <?php
 
-//$this->breadcrumbs = array(
-//    'Manage Posts',
-//);
+$this->params['breadcrumbs'][] = 'Manage posts';
 ?>
     <h1>Manage Posts</h1>
 

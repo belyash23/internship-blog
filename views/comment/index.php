@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\CommentSearch */
@@ -14,30 +15,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Comment', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'author',
-            'content',
-            'status',
-            'email:email',
-            //'url:url',
-            //'create_time',
-            //'post_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+    <?php
+    Pjax::begin();
+    echo \yii\widgets\ListView::widget(
+        [
+            'dataProvider' => $dataProvider,
+            'itemView' => '_view'
+        ]
+    );
+    Pjax::end();
+    ?>
 
 
 </div>

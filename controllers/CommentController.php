@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Comment;
 use app\models\CommentSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,13 +36,30 @@ class CommentController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new CommentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->renderIndex();
+    }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+    public function renderIndex()
+    {
+        $query = Comment::find()->with('post');
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $query,
+                'sort' => [
+                    'defaultOrder' => [
+                        'status' => SORT_ASC,
+                        'create_time' => SORT_DESC
+                    ]
+                ]
+            ]
+        );
+
+        return $this->render(
+            'index',
+            [
+                'dataProvider' => $dataProvider,
+            ]
+        );
     }
 
     /**
@@ -52,9 +70,12 @@ class CommentController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        return $this->render(
+            'view',
+            [
+                'model' => $this->findModel($id),
+            ]
+        );
     }
 
     /**
@@ -70,9 +91,12 @@ class CommentController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'create',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -90,9 +114,12 @@ class CommentController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render(
+            'update',
+            [
+                'model' => $model,
+            ]
+        );
     }
 
     /**
@@ -105,8 +132,7 @@ class CommentController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return $this->renderIndex();
     }
 
     /**
@@ -123,5 +149,12 @@ class CommentController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionApprove($id)
+    {
+        $comment = $this->findModel($id);
+        $comment->approve();
+        $this->redirect(['index']);
     }
 }

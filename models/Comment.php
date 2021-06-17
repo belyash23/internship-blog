@@ -104,4 +104,10 @@ class Comment extends \yii\db\ActiveRecord
     {
         return self::find()->where(['status' => self::STATUS_PENDING])->count();
     }
+
+    public function approve()
+    {
+        $this->status = Comment::STATUS_APPROVED;
+        $this->update();
+    }
 }
