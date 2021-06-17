@@ -72,6 +72,7 @@ $this->beginBody() ?>
         if (!Yii::$app->user->isGuest) {
             echo UserMenu::widget();
         }
+        echo \app\components\TagCloud::widget(['maxTags' => Yii::$app->params['tagCloudCount']]);
         ?>
     </div>
 
