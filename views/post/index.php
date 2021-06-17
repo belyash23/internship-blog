@@ -11,9 +11,6 @@ $this->title = 'Posts';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="post-index">
-    <p>
-        <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?php
     $tag = Yii::$app->request->get('tag');
     if (!empty($tag)) {
