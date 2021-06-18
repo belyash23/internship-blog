@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 ?>
+<h5><?= $title ?></h5>
 <ul>
     <li><?php
         echo Html::a('Создать новую запись', array('post/create')); ?></li>

@@ -22,7 +22,8 @@ class RecentComments extends Widget
         return $this->render(
             'recentComments',
             [
-                'recentComments' => $this->recentComments
+                'recentComments' => $this->recentComments,
+                'title' => $this->title,
             ]
         );
     }

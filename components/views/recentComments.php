@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 
 ?>
+<h5><?= $title ?></h5>
 <ul>
     <?php
     foreach ($recentComments as $comment): ?>

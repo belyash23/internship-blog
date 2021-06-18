@@ -15,6 +15,7 @@ class TagCloud extends Widget
 
     public function run()
     {
+        echo "<h5>$this->title</h5>";
         $tags = Tag::findTagWeights($this->maxTags);
 
         foreach ($tags as $tag => $weight) {

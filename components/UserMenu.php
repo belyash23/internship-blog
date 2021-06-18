@@ -18,6 +18,11 @@ class UserMenu extends Widget
 
     public function run()
     {
-        return $this->render('userMenu');
+        return $this->render(
+            'userMenu',
+            [
+                'title' => $this->title
+            ]
+        );
     }
 }
