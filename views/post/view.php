@@ -15,21 +15,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= DetailView::widget(
-        [
-            'model' => $model,
-            'attributes' => [
-                'id',
-                'title',
-                'content',
-                'status',
-                'tags',
-                'create_time',
-                'update_time',
-                'user_id',
-            ],
-        ]
-    ) ?>
+    <div class="post">
+        <div class="title">
+            <?php echo Html::a(Html::encode($model->title), $model->url); ?>
+        </div>
+        <div class="author">
+            posted by <?php echo $model->user->username . ' on ' . date('F j, Y',$model->create_time); ?>
+        </div>
+        <div class="content">
+            <?php
+                echo \yii\helpers\Markdown::process($model->content);
+            ?>
+        </div>
+        <div class="nav">
+            <b>Tags:</b>
+            <?php echo implode(', ', $model->tagLinks); ?>
+            <br/>
+            <?php echo Html::a('Permalink', $model->url); ?> |
+            <?php echo Html::a("Comments ({$model->commentCount})",$model->url.'#comments'); ?> |
+            Last updated on <?php echo date('F j, Y',$model->update_time); ?>
+        </div>
+    </div>
     <div id="comments">
         <?php
         if ($model->commentCount >= 1): ?>
